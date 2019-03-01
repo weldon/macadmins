@@ -29,39 +29,41 @@ def main():
 	response_json = json.loads(response.text)
 	# end of requests method
 
-	# print list of classes with ID
+	# get list of classes with ID
 	jss_class_list = response_json['classes']
 
+	# print list of classes for user
 	for x in jss_class_list:
 		jss_class_id = x['id']
 		jss_class_name = x['name']
 		print ('Class: %s' % jss_class_id + ' ' + jss_class_name )
 
+	# ask the user to enter the ID of a class
 	jss_class_id = input('Enter the class ID: ')
 
 	# get class name for selected id
 	class_url = classes_url + '/id/' + jss_class_id
 
-	# requests method
+	# request selected class details
 	response  = requests.get(class_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
 	print('Status code from request: %s' % response.status_code)
 	response_json = json.loads(response.text)
 	jss_class_name = response_json['class']['name']
 
-	# Get list of students in selected class
+	# Get api endpoint for selected class
 	class_url = jss_url + '/classes/id/%s' % jss_class_id
 	print(class_url)
 
-	# requests method
+	# request class details from api
 	response  = requests.get(class_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
 	print('Status code from request: %s' % response.status_code)
 	response_json = json.loads(response.text)
 	# end of requests method
 
-	# get list of mobile devices in class
+	# build list of mobile devices in class
 	jss_class_device_list = response_json['class']['mobile_devices']
 
-	# create empty array to hold list of devices
+	# create empty array to hold list of device udids
 	udid_list = []
 
 	for x in jss_class_device_list:
@@ -80,16 +82,18 @@ def main():
 	for x in udid_list:
 		udid_url = udid_base_url + x
 
-		# requests block
+		# request device id from udid
 		response  = requests.get(udid_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
 		response_json = json.loads(response.text)
 
-		# get device object
+		# get device details
 		jss_device_id = response_json['mobile_device']['general']['id']
 
-		#append to array
+		#append to list of devices by id
 		device_list.append(jss_device_id)
 		#end of for loop
+		
+	# print list of devices in the class
 	print('Devices in ' + jss_class_name)
 	print(device_list)
 
@@ -98,7 +102,6 @@ def main():
 	for x in device_list:
 		group_xml = group_xml + '<mobile_device><id>' + str(x) + '</id></mobile_device>'
 	group_xml = group_xml + '</mobile_devices></mobile_device_group>'
-	print(group_xml)
 
 #	# post static group xml to API endpoint
 	group_url = jss_url + '/mobiledevicegroups/id/0'
