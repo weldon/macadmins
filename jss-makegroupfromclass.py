@@ -14,7 +14,6 @@ def main():
 	jss_url = base_url + '/JSSResource'
 	users_url = jss_url + '/users'
 	classes_url = jss_url + '/classes'
-	print(classes_url)
 	
 	# JSS API credentials
 	UsernameVar = input('Enter your Jamf Pro username: ')
@@ -25,7 +24,6 @@ def main():
 
 	# requests method
 	response  = requests.get(classes_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
-	print('Status code from request: %s' % response.status_code)
 	response_json = json.loads(response.text)
 	# end of requests method
 
@@ -36,27 +34,24 @@ def main():
 	for x in jss_class_list:
 		jss_class_id = x['id']
 		jss_class_name = x['name']
-		print ('Class: %s' % jss_class_id + ' ' + jss_class_name )
+		print ('ID: %s' % jss_class_id + ' (' + jss_class_name + ')' )
 
 	# ask the user to enter the ID of a class
-	jss_class_id = input('Enter the class ID: ')
+	jss_class_id = input('Enter the Class ID number: ')
 
 	# get class name for selected id
 	class_url = classes_url + '/id/' + jss_class_id
 
 	# request selected class details
 	response  = requests.get(class_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
-	print('Status code from request: %s' % response.status_code)
 	response_json = json.loads(response.text)
 	jss_class_name = response_json['class']['name']
 
 	# Get api endpoint for selected class
 	class_url = jss_url + '/classes/id/%s' % jss_class_id
-	print(class_url)
 
 	# request class details from api
 	response  = requests.get(class_url, headers={'Accept': 'application/json'}, auth=(UsernameVar,PasswordVar))
-	print('Status code from request: %s' % response.status_code)
 	response_json = json.loads(response.text)
 	# end of requests method
 
@@ -97,6 +92,7 @@ def main():
 	print('Devices in ' + jss_class_name)
 	print(device_list)
 
+	print('Creating the mobile device group…')
 	# create xml for static group for selected class and add all device ids found
 	group_xml = '<mobile_device_group><name>' + jss_class_name + ' Class group</name><is_smart>false</is_smart><mobile_devices>'
 	for x in device_list:
@@ -105,10 +101,18 @@ def main():
 
 #	# post static group xml to API endpoint
 	group_url = jss_url + '/mobiledevicegroups/id/0'
-	print(group_url)
+
 	# requests block
 	response  = requests.post(group_url, data=group_xml, headers={'Content-Type': 'text/xml'}, auth=(UsernameVar,PasswordVar))
 	print(response.status_code, response.reason)
+	if response.status_code == 409:
+		print('The selected class already has a mobile device group with the same name')
+		update = input('Enter "y" to update, or "n" to quit: ')
+		if update == 'y':
+			group_url = jss_url + '/mobiledevicegroups/name/' + requests.utils.requote_uri(jss_class_name) + requests.utils.requote_uri(' Class group')
+			print(group_url)
+			response  = requests.put(group_url, data=group_xml, headers={'Content-Type': 'text/xml'}, auth=(UsernameVar,PasswordVar))
+			print(response.status_code, response.reason)
 
 
 if __name__ == '__main__':
