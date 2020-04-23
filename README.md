@@ -1,6 +1,6 @@
 # macadmin
 
-## check_profile_payload.py
+## check_profile_payloads.py
 
 This python script will use the Jamf Pro API to check each configuration profile for the presence of a test string in the payload of the profile. This is useful if you want to find all the profiles that have a particular kind of payload, like all profiles with wi-fi defined, or all profiles with a VPN config. The output of the script is the URL to view the profile in your web browser (using the Jamf Pro Server web interface). If a particular profile is NOT a match, then there is an entry that says so.
 
