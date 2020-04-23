@@ -2,6 +2,10 @@ import requests
 import json
 import getpass
 
+# string to look for in profile payload
+# example: '<key>PayloadType</key><string>com.apple.vpn.managed</string>' to find profiles with a VPN payload
+payload_test = '<key>PayloadType</key><string>com.apple.vpn.managed</string>'
+
 def main():
 
 	# base URL of JSS
@@ -11,11 +15,7 @@ def main():
 	
 	# JSS API credentials
 	jssuser = input('Enter your Jamf Pro username: ')
-	jsspass = getpass.getpass('Enter your Jamf Pro password: ')
-	
-	# string to look for in profile payload
-	# example: '<key>PayloadType</key><string>com.apple.vpn.managed</string>' to find VPN
-	payload_test = '<key>PayloadType</key><string>com.apple.vpn.managed</string>'	
+	jsspass = getpass.getpass('Enter your Jamf Pro password: ')	
 
 	# requests method
 	r  = requests.get(api_url, headers={'Accept': 'application/json'}, auth=(jssuser,jsspass))
