@@ -17,5 +17,9 @@ The goal is to take the keychain dump and put it into a nice python dictionary s
 
 This python script will walk you through selecting a class imported from Apple School Manager and then it will create a static mobile device group with the devices that are on the roster for that class.
 
+## update_computer_smartgroup.py
+
+This script will updated an existing computer smart group by id # to update the criteria. You need to manually create the smart group and get the name and id for the script variables.
+The intent of the script is to allow you to update the application version value to correctly identify computers with the latest available version. The script has some values for the Zoom app. If the latest available version is 4.6.13, then you would need to enter your smart group name, id and update the app_version variable value to "4.6.13"
 
 
