@@ -1,9 +1,9 @@
 ### This script will update an existing smart group that has two criteria:
 ### 	1) application title
 ###		2) applivation version
-### The idea is that this smart group will find computers with a certain (latest?) version…
-### of a certain app. When the application version changes, this script can update…
-### the version number in the smart group criteria so that the smart group continues to find…
+### The idea is that this smart group will find computers with a certain (latest?) version -
+### of a certain app. When the application version changes, this script can update -
+### the version number in the smart group criteria so that the smart group continues to find -
 ### computers with the latest version of that app.
 ###
 ### The script uses the example of updating smart group 11 to look for zoom v4.6.12
@@ -44,7 +44,7 @@ def main():
 	if jps_url == "":			
 		print('Enter your Jamf Pro Server hostname in the form "https://servername.com:8443"')
 		jps_url = input('Jamf Pro Server URL: ')
-	api_url = jps_url + '/JSSResource/computergroups/id/{id}'.format(id = sg_id)
+	api_url = jps_url + f'/JSSResource/computergroups/id/{sg_id}'
 	
 	# JSS API credentials
 	if jpsuser == "":
@@ -53,20 +53,20 @@ def main():
 		jpspass = getpass.getpass('Enter your Jamf Pro password: ')	
 	
 	# XML Payload
-	payload = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><computer_group><id>{id}</id><name>{name}</name><is_smart>true</is_smart><site><id>{site}</id><name>{site_name}</name></site><criteria><size>2</size><criterion><name>Application Title</name><priority>0</priority><and_or>and</and_or><search_type>{name_type}</search_type><value>{app}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion><criterion><name>Application Version</name><priority>1</priority><and_or>and</and_or><search_type>{version_type}</search_type><value>{version}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion></criteria></computer_group>'.format(id=sg_id, name=sg_name, site=site_id, site_name=site_name, name_type=name_search_type, app=app_title, version_type=version_search_type, version=app_version)
+	payload = f'<?xml version=\"1.0\" encoding=\"UTF-8\"?><computer_group><id>{sg_id}</id><name>{sg_name}</name><is_smart>true</is_smart><site><id>{site_id}</id><name>{site_name}</name></site><criteria><size>2</size><criterion><name>Application Title</name><priority>0</priority><and_or>and</and_or><search_type>{name_search_type}</search_type><value>{app_title}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion><criterion><name>Application Version</name><priority>1</priority><and_or>and</and_or><search_type>{version_search_type}</search_type><value>{app_version}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion></criteria></computer_group>'
 		
 	# Request
 	try: r  = requests.put(api_url, headers={'Accept': 'application/xml'}, auth=(jpsuser,jpspass), data=payload)
 	except:
-		print("something went wrong with your connection to {jps}".format(jps=jps_url))
+		print(f"something went wrong with your connection to {jps_url}")
 	else:
-		print("connection to {jps} was successful".format(jps=jps_url))
+		print(f"connection to {jps_url} was successful")
 	
 	# Check if smart group was updated
 	if r.status_code == 201:
-		print("smart group {id} was successfully updated".format(id=sg_id))	
+		print(f"smart group {sg_id} was successfully updated")	
 	else:
-		print("smart group {id} was not updated. Check for errors".format(id=sg_id))
+		print(f"smart group {sg_id} was not updated. Check for errors")
 	
 if __name__ == '__main__':
 	main()
