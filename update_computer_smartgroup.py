@@ -1,6 +1,12 @@
-### This script will updated an existing smart group by id # to update the criteria
-### The intent of the script is to allow you to update the version number in a smart group
-### to identify computers with the latest available version
+### This script will update an existing smart group that has two criteria:
+### 	1) application title
+###		2) applivation version
+### The idea is that this smart group will find computers with a certain (latest?) version…
+### of a certain app. When the application version changes, this script can update…
+### the version number in the smart group criteria so that the smart group continues to find…
+### computers with the latest version of that app.
+
+### This script will updated an existing smart group by id #
 
 
 import requests
