@@ -1,14 +1,14 @@
-### This script will update an existing smart group that has two criteria:
-### 	1) application title
-###		2) applivation version
-### The idea is that this smart group will find computers with a certain (latest?) version -
-### of a certain app. When the application version changes, this script can update -
-### the version number in the smart group criteria so that the smart group continues to find -
-### computers with the latest version of that app.
-###
-### The script uses the example of updating smart group 11 to look for zoom v4.6.12
-
-### This script will updated an existing smart group by id #
+# This script will update an existing smart group that has two criteria:
+# 	1) application title
+#	2) applivation version
+# The idea is that this smart group will find computers with a certain (latest?) version -
+# of a certain app. When the application version changes, this script can update -
+# the version number in the smart group criteria so that the smart group continues to find -
+# computers with the latest version of that app.
+#
+# The script uses the example of updating smart group 11 to look for zoom v4.6.12
+#
+# This script will updated an existing smart group by id #
 
 
 import requests
