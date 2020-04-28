@@ -53,7 +53,37 @@ def main():
 		jpspass = getpass.getpass('Enter your Jamf Pro password: ')	
 	
 	# XML Payload
-	payload = f'<?xml version=\"1.0\" encoding=\"UTF-8\"?><computer_group><id>{sg_id}</id><name>{sg_name}</name><is_smart>true</is_smart><site><id>{site_id}</id><name>{site_name}</name></site><criteria><size>2</size><criterion><name>Application Title</name><priority>0</priority><and_or>and</and_or><search_type>{name_search_type}</search_type><value>{app_title}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion><criterion><name>Application Version</name><priority>1</priority><and_or>and</and_or><search_type>{version_search_type}</search_type><value>{app_version}</value><opening_paren>false</opening_paren><closing_paren>false</closing_paren></criterion></criteria></computer_group>'
+	payload = f"""<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<computer_group>
+		<id>{sg_id}</id>
+		<name>{sg_name}</name>
+		<is_smart>true</is_smart>
+		<site>
+			<id>{site_id}</id>
+			<name>{site_name}</name>
+		</site>
+		<criteria>
+			<size>2</size>
+			<criterion>
+				<name>Application Title</name>
+				<priority>0</priority>
+				<and_or>and</and_or>
+				<search_type>{name_search_type}</search_type>
+				<value>{app_title}</value>
+				<opening_paren>false</opening_paren>
+				<closing_paren>false</closing_paren>
+			</criterion>
+			<criterion>
+				<name>Application Version</name>
+				<priority>1</priority>
+				<and_or>and</and_or>
+				<search_type>{version_search_type}</search_type>
+				<value>{app_version}</value>
+				<opening_paren>false</opening_paren>
+				<closing_paren>false</closing_paren>
+			</criterion>
+		</criteria>
+	</computer_group>"""
 		
 	# Request
 	try: r  = requests.put(api_url, headers={'Accept': 'application/xml'}, auth=(jpsuser,jpspass), data=payload)
